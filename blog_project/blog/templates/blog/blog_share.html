@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Share "{{ blog.title }}"</h1>
+  {% if sent %}
+    <p>Blog post sent successfully!</p>
+  {% else %}
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Send</button>
+    </form>
+  {% endif %}
+{% endblock %}

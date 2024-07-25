@@ -1,0 +1,70 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- Blog Detail Header -->
+    <header class="blog-header">
+        <h1 class="blog-title">{{ blog.title }}</h1>
+        <p class="blog-date">{{ blog.created_at|date:"F j, Y" }}</p>
+    </header>
+
+    <!-- Blog Content -->
+    <div class="blog-content">
+        <p>{{ blog.body }}</p>
+    </div>
+
+    <!-- Share This Blog Section -->
+    <section class="share-blog">
+        <h2>Share This Blog</h2>
+        <button class="btn btn-secondary" onclick="toggleShareForm()">Share This Blog</button>
+        <form method="post" id="share-form" class="share-form" style="display:none;">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </section>
+
+    <!-- Comments Section -->
+    <section class="comments-section">
+        <h2>Comments</h2>
+        {% if blog.comments.all %}
+            <ul class="comments-list">
+                {% for comment in blog.comments.all %}
+                    <li class="comment">
+                        <p class="comment-body">{{ comment.body }}</p>
+                        <p class="comment-likes">Likes: {{ comment.likes.count }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No comments yet. Be the first to comment!</p>
+        {% endif %}
+    </section>
+
+    <!-- Comment Form -->
+    {% if user.is_authenticated %}
+        <section class="comment-form-section">
+            <h2>Add a Comment</h2>
+            <form method="post" class="comment-form">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit" class="btn btn-primary">Add Comment</button>
+            </form>
+        </section>
+    {% else %}
+        <p class="login-prompt">Log in to leave a comment. <a href="{% url 'login' %}">Login here</a>.</p>
+    {% endif %}
+</div>
+
+<!-- JavaScript for Toggling the Share Form -->
+<script>
+  function toggleShareForm() {
+      var form = document.getElementById('share-form');
+      if (form.style.display === 'none' || form.style.display === '') {
+          form.style.display = 'block';
+      } else {
+          form.style.display = 'none';
+      }
+  }
+</script>
+{% endblock %}

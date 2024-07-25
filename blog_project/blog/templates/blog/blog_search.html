@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Search Results</h1>
+  {% if query %}
+    <p>Results for "{{ query }}":</p>
+    {% for result in results %}
+      <h2><a href="{{ result.get_absolute_url }}">{{ result.title }}</a></h2>
+      <p>{{ result.body|truncatewords:30 }}</p>
+    {% endfor %}
+  {% else %}
+    <p>No results found</p>
+  {% endif %}
+{% endblock %}
